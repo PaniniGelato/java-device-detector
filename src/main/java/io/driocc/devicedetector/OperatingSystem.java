@@ -166,6 +166,7 @@ public class OperatingSystem extends ParserAbstract {
             }
         }
         DetectResult ret = new DetectResult();
+        ret.setType(this.getType());
         ret.setName(name);
         ret.setShortName(shortName);
         ret.setVersion(this.buildVersion(osRegex.get("version").toString(), matches));

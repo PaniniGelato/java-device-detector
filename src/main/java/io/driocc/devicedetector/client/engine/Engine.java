@@ -83,8 +83,8 @@ public class Engine extends ClientParserAbstract {
         }
         String browserEngineVersion = buildEngineVersion(userAgent, name);
         DetectResult ret = new DetectResult();
-        ret.setBrowserEngine(name);
-        ret.setBrowserEngineVersion(browserEngineVersion);
+        ret.setEngine(name);
+        ret.setEngineVersion(browserEngineVersion);
 		return ret;
     }    
     public String buildEngineVersion(String userAgent, String engine) {

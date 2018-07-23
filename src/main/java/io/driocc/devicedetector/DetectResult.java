@@ -12,13 +12,13 @@ import java.io.Serializable;
 public class DetectResult implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private String type;
 	private String name;
 	private String shortName;
 	private String version;
 	private String platform;
-	private String browser;
-	private String browserEngine;
-	private String browserEngineVersion;
+	private String engine;
+	private String engineVersion;
 	/**
 	 * @return the name
 	 */
@@ -68,39 +68,39 @@ public class DetectResult implements Serializable {
 		this.platform = platform;
 	}
 	/**
-	 * @return the browserEngine
+	 * @return the type
 	 */
-	public String getBrowserEngine() {
-		return browserEngine;
+	public String getType() {
+		return type;
 	}
 	/**
-	 * @param browserEngine the browserEngine to set
+	 * @param type the type to set
 	 */
-	public void setBrowserEngine(String browserEngine) {
-		this.browserEngine = browserEngine;
+	public void setType(String type) {
+		this.type = type;
 	}
 	/**
-	 * @return the browserEngineVersion
+	 * @return the engine
 	 */
-	public String getBrowserEngineVersion() {
-		return browserEngineVersion;
+	public String getEngine() {
+		return engine;
 	}
 	/**
-	 * @param browserEngineVersion the browserEngineVersion to set
+	 * @param engine the engine to set
 	 */
-	public void setBrowserEngineVersion(String browserEngineVersion) {
-		this.browserEngineVersion = browserEngineVersion;
+	public void setEngine(String engine) {
+		this.engine = engine;
 	}
 	/**
-	 * @return the browser
+	 * @return the engineVersion
 	 */
-	public String getBrowser() {
-		return browser;
+	public String getEngineVersion() {
+		return engineVersion;
 	}
 	/**
-	 * @param browser the browser to set
+	 * @param engineVersion the engineVersion to set
 	 */
-	public void setBrowser(String browser) {
-		this.browser = browser;
+	public void setEngineVersion(String engineVersion) {
+		this.engineVersion = engineVersion;
 	}
 }
