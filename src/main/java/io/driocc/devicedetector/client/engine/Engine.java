@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 import io.driocc.devicedetector.DetectResult;
 import io.driocc.devicedetector.client.ClientParserAbstract;
-import io.driocc.devicedetector.yaml.YamlParser;
 
 /**
  * @author kyon
@@ -23,18 +22,11 @@ public class Engine extends ClientParserAbstract {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final String FIXTURE_FILE = "regexes/client/browser_engine.yml";
-    private Engine() {
-    	super();
-    	this.setType("browserengine");
-    	this.setRegexes(YamlParser.get(FIXTURE_FILE));
-    	
+    public Engine() {
+    	super("browserengine", FIXTURE_FILE);
     }
-	private static class LazyHolder {
-        static final Engine INSTANCE = new Engine();
-    }
-
-    public static Engine getInstance() {
-        return LazyHolder.INSTANCE;
+    public Engine(String type, String file) {
+    	super(type, file);
     }
     /**
      * Known browser engines mapped to their internal short codes

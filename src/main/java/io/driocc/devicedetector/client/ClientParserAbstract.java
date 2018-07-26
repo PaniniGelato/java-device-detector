@@ -18,6 +18,14 @@ import io.driocc.devicedetector.ParserAbstract;
  */
 public class ClientParserAbstract extends ParserAbstract{
 
+	/**
+	 * @param type
+	 * @param file
+	 */
+	public ClientParserAbstract(String type, String file) {
+		super(type, file);		
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	public DetectResult parse(String userAgent) {

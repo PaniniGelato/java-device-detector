@@ -1,13 +1,15 @@
 package io.driocc.devicedetector;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.driocc.devicedetector.utils.Utils;
-import io.driocc.devicedetector.yaml.YamlParser;
 	
 /**
  * 
@@ -18,130 +20,129 @@ public class OperatingSystem extends ParserAbstract {
 		
 	private static final long serialVersionUID = 1L;
 	private static final String FIXTURE_FILE = "regexes/oss.yml";
-	public Map<String, String> operatingSystems;
-	public Map<String, String[]> osFamilies;	
-	private OperatingSystem() {
-		this.setType("os");
-		this.setYaml(FIXTURE_FILE);
-		this.setRegexes(YamlParser.get(this.getYaml()));
-		operatingSystems = new HashMap<String, String>();
-		operatingSystems.put("AIX", "AIX");
-        operatingSystems.put("AND", "Android");
-        operatingSystems.put("AMG", "AmigaOS");
-        operatingSystems.put("ATV", "Apple TV");
-        operatingSystems.put("ARL", "Arch Linux");
-        operatingSystems.put("BTR", "BackTrack");
-        operatingSystems.put("SBA", "Bada");
-        operatingSystems.put("BEO", "BeOS");
-        operatingSystems.put("BLB", "BlackBerry OS");
-        operatingSystems.put("QNX", "BlackBerry Tablet OS");
-        operatingSystems.put("BMP", "Brew");
-        operatingSystems.put("CES", "CentOS");
-        operatingSystems.put("COS", "Chrome OS");
-        operatingSystems.put("CYN", "CyanogenMod");
-        operatingSystems.put("DEB", "Debian");
-        operatingSystems.put("DFB", "DragonFly");
-        operatingSystems.put("FED", "Fedora");
-        operatingSystems.put("FOS", "Firefox OS");
-        operatingSystems.put("BSD", "FreeBSD");
-        operatingSystems.put("GNT", "Gentoo");
-        operatingSystems.put("GTV", "Google TV");
-        operatingSystems.put("HPX", "HP-UX");
-        operatingSystems.put("HAI", "Haiku OS");
-        operatingSystems.put("IRI", "IRIX");
-        operatingSystems.put("INF", "Inferno");
-        operatingSystems.put("KNO", "Knoppix");
-        operatingSystems.put("KBT", "Kubuntu");
-        operatingSystems.put("LIN", "GNU/Linux");
-        operatingSystems.put("LBT", "Lubuntu");
-        operatingSystems.put("VLN", "VectorLinux");
-        operatingSystems.put("MAC", "Mac");
-        operatingSystems.put("MAE", "Maemo");
-        operatingSystems.put("MDR", "Mandriva");
-        operatingSystems.put("SMG", "MeeGo");
-        operatingSystems.put("MCD", "MocorDroid");
-        operatingSystems.put("MIN", "Mint");
-        operatingSystems.put("MLD", "MildWild");
-        operatingSystems.put("MOR", "MorphOS");
-        operatingSystems.put("NBS", "NetBSD");
-        operatingSystems.put("MTK", "MTK / Nucleus");
-        operatingSystems.put("WII", "Nintendo");
-        operatingSystems.put("NDS", "Nintendo Mobile");
-        operatingSystems.put("OS2", "OS/2");
-        operatingSystems.put("T64", "OSF1");
-        operatingSystems.put("OBS", "OpenBSD");
-        operatingSystems.put("PSP", "PlayStation Portable");
-        operatingSystems.put("PS3", "PlayStation");
-        operatingSystems.put("RHT", "Red Hat");
-        operatingSystems.put("ROS", "RISC OS");
-        operatingSystems.put("REM", "Remix OS");
-        operatingSystems.put("RZD", "RazoDroiD");
-        operatingSystems.put("SAB", "Sabayon");
-        operatingSystems.put("SSE", "SUSE");
-        operatingSystems.put("SAF", "Sailfish OS");
-        operatingSystems.put("SLW", "Slackware");
-        operatingSystems.put("SOS", "Solaris");
-        operatingSystems.put("SYL", "Syllable");
-        operatingSystems.put("SYM", "Symbian");
-        operatingSystems.put("SYS", "Symbian OS");
-        operatingSystems.put("S40", "Symbian OS Series 40");
-        operatingSystems.put("S60", "Symbian OS Series 60");
-        operatingSystems.put("SY3", "Symbian^3");
-        operatingSystems.put("TDX", "ThreadX");
-        operatingSystems.put("TIZ", "Tizen");
-        operatingSystems.put("UBT", "Ubuntu");
-        operatingSystems.put("WTV", "WebTV");
-        operatingSystems.put("WIN", "Windows");
-        operatingSystems.put("WCE", "Windows CE");
-        operatingSystems.put("WMO", "Windows Mobile");
-        operatingSystems.put("WPH", "Windows Phone");
-        operatingSystems.put("WRT", "Windows RT");
-        operatingSystems.put("XBX", "Xbox");
-        operatingSystems.put("XBT", "Xubuntu");
-        operatingSystems.put("YNS", "YunOs");
-        operatingSystems.put("IOS", "iOS");
-        operatingSystems.put("POS", "palmOS");
-        operatingSystems.put("WOS", "webOS");
-        osFamilies = new HashMap<String, String[]>();
-		osFamilies.put("Android", new String[]{"AND", "CYN", "REM", "RZD", "MLD", "MCD", "YNS"});
-		osFamilies.put("AAndroid", new String[]{"AND", "CYN", "REM", "RZD", "MLD", "MCD", "YNS"});
-		osFamilies.put("AAmigaOS", new String[]{"AMG", "MOR"});
-		osFamilies.put("Apple TV", new String[]{"ATV"});
-		osFamilies.put("BlackBerry", new String[]{"BLB", "QNX"});
-		osFamilies.put("Brew", new String[]{"BMP"});
-		osFamilies.put("BeOS", new String[]{"BEO", "HAI"});
-		osFamilies.put("Chrome OS", new String[]{"COS"});
-		osFamilies.put("Firefox OS", new String[]{"FOS"});
-		osFamilies.put("Gaming Console", new String[]{"WII", "PS3"});
-		osFamilies.put("Google TV", new String[]{"GTV"});
-		osFamilies.put("IBM", new String[]{"OS2"});
-		osFamilies.put("iOS", new String[]{"IOS"});
-		osFamilies.put("RISC OS", new String[]{"ROS"});
-		osFamilies.put("GNU/Linux", new String[]{"LIN", "ARL", "DEB", "KNO", "MIN", "UBT", "KBT", "XBT", "LBT", "FED", "RHT", "VLN", "MDR", "GNT", "SAB", "SLW", "SSE", "CES", "BTR", "SAF"});
-		osFamilies.put("Mac", new String[]{"MAC"});
-		osFamilies.put("Mobile Gaming Console", new String[]{"PSP", "NDS", "XBX"});
-		osFamilies.put("Real-time OS", new String[]{"MTK", "TDX"});
-		osFamilies.put("Other Mobile", new String[]{"WOS", "POS", "SBA", "TIZ", "SMG", "MAE"});
-		osFamilies.put("Symbian", new String[]{"SYM", "SYS", "SY3", "S60", "S40"});
-		osFamilies.put("Unix", new String[]{"SOS", "AIX", "HPX", "BSD", "NBS", "OBS", "DFB", "SYL", "IRI", "T64", "INF"});
-		osFamilies.put("WebTV", new String[]{"WTV"});
-		osFamilies.put("Windows", new String[]{"WIN"});
-		osFamilies.put("Windows Mobile", new String[]{"WPH", "WMO", "WCE", "WRT"});
+	public static final String UNKNOWN = "UNK";
+	public static Map<String, String> OPERATING_SYSTEMS;
+	public static Map<String, String[]> OS_FAMILIES;
+	public static List<String> DESKTOP_OS = Arrays.asList(new String[] {
+			"AmigaOS", "IBM", "GNU/Linux", "Mac", "Unix", "Windows", "BeOS", "Chrome OS"	
+	});
+	public OperatingSystem() {
+		super("os", FIXTURE_FILE);
 	}
-	
-	private static class LazyHolder {
-        static final OperatingSystem INSTANCE = new OperatingSystem();
-    }
-
-    public static OperatingSystem getInstance() {
-        return LazyHolder.INSTANCE;
-    }
+	public OperatingSystem(String type, String file) {
+		super(type,file);
+	}
+	static {
+		OPERATING_SYSTEMS = new HashMap<String, String>();
+		OPERATING_SYSTEMS.put("AIX", "AIX");
+        OPERATING_SYSTEMS.put("AND", "Android");
+        OPERATING_SYSTEMS.put("AMG", "AmigaOS");
+        OPERATING_SYSTEMS.put("ATV", "Apple TV");
+        OPERATING_SYSTEMS.put("ARL", "Arch Linux");
+        OPERATING_SYSTEMS.put("BTR", "BackTrack");
+        OPERATING_SYSTEMS.put("SBA", "Bada");
+        OPERATING_SYSTEMS.put("BEO", "BeOS");
+        OPERATING_SYSTEMS.put("BLB", "BlackBerry OS");
+        OPERATING_SYSTEMS.put("QNX", "BlackBerry Tablet OS");
+        OPERATING_SYSTEMS.put("BMP", "Brew");
+        OPERATING_SYSTEMS.put("CES", "CentOS");
+        OPERATING_SYSTEMS.put("COS", "Chrome OS");
+        OPERATING_SYSTEMS.put("CYN", "CyanogenMod");
+        OPERATING_SYSTEMS.put("DEB", "Debian");
+        OPERATING_SYSTEMS.put("DFB", "DragonFly");
+        OPERATING_SYSTEMS.put("FED", "Fedora");
+        OPERATING_SYSTEMS.put("FOS", "Firefox OS");
+        OPERATING_SYSTEMS.put("BSD", "FreeBSD");
+        OPERATING_SYSTEMS.put("GNT", "Gentoo");
+        OPERATING_SYSTEMS.put("GTV", "Google TV");
+        OPERATING_SYSTEMS.put("HPX", "HP-UX");
+        OPERATING_SYSTEMS.put("HAI", "Haiku OS");
+        OPERATING_SYSTEMS.put("IRI", "IRIX");
+        OPERATING_SYSTEMS.put("INF", "Inferno");
+        OPERATING_SYSTEMS.put("KNO", "Knoppix");
+        OPERATING_SYSTEMS.put("KBT", "Kubuntu");
+        OPERATING_SYSTEMS.put("LIN", "GNU/Linux");
+        OPERATING_SYSTEMS.put("LBT", "Lubuntu");
+        OPERATING_SYSTEMS.put("VLN", "VectorLinux");
+        OPERATING_SYSTEMS.put("MAC", "Mac");
+        OPERATING_SYSTEMS.put("MAE", "Maemo");
+        OPERATING_SYSTEMS.put("MDR", "Mandriva");
+        OPERATING_SYSTEMS.put("SMG", "MeeGo");
+        OPERATING_SYSTEMS.put("MCD", "MocorDroid");
+        OPERATING_SYSTEMS.put("MIN", "Mint");
+        OPERATING_SYSTEMS.put("MLD", "MildWild");
+        OPERATING_SYSTEMS.put("MOR", "MorphOS");
+        OPERATING_SYSTEMS.put("NBS", "NetBSD");
+        OPERATING_SYSTEMS.put("MTK", "MTK / Nucleus");
+        OPERATING_SYSTEMS.put("WII", "Nintendo");
+        OPERATING_SYSTEMS.put("NDS", "Nintendo Mobile");
+        OPERATING_SYSTEMS.put("OS2", "OS/2");
+        OPERATING_SYSTEMS.put("T64", "OSF1");
+        OPERATING_SYSTEMS.put("OBS", "OpenBSD");
+        OPERATING_SYSTEMS.put("PSP", "PlayStation Portable");
+        OPERATING_SYSTEMS.put("PS3", "PlayStation");
+        OPERATING_SYSTEMS.put("RHT", "Red Hat");
+        OPERATING_SYSTEMS.put("ROS", "RISC OS");
+        OPERATING_SYSTEMS.put("REM", "Remix OS");
+        OPERATING_SYSTEMS.put("RZD", "RazoDroiD");
+        OPERATING_SYSTEMS.put("SAB", "Sabayon");
+        OPERATING_SYSTEMS.put("SSE", "SUSE");
+        OPERATING_SYSTEMS.put("SAF", "Sailfish OS");
+        OPERATING_SYSTEMS.put("SLW", "Slackware");
+        OPERATING_SYSTEMS.put("SOS", "Solaris");
+        OPERATING_SYSTEMS.put("SYL", "Syllable");
+        OPERATING_SYSTEMS.put("SYM", "Symbian");
+        OPERATING_SYSTEMS.put("SYS", "Symbian OS");
+        OPERATING_SYSTEMS.put("S40", "Symbian OS Series 40");
+        OPERATING_SYSTEMS.put("S60", "Symbian OS Series 60");
+        OPERATING_SYSTEMS.put("SY3", "Symbian^3");
+        OPERATING_SYSTEMS.put("TDX", "ThreadX");
+        OPERATING_SYSTEMS.put("TIZ", "Tizen");
+        OPERATING_SYSTEMS.put("UBT", "Ubuntu");
+        OPERATING_SYSTEMS.put("WTV", "WebTV");
+        OPERATING_SYSTEMS.put("WIN", "Windows");
+        OPERATING_SYSTEMS.put("WCE", "Windows CE");
+        OPERATING_SYSTEMS.put("WMO", "Windows Mobile");
+        OPERATING_SYSTEMS.put("WPH", "Windows Phone");
+        OPERATING_SYSTEMS.put("WRT", "Windows RT");
+        OPERATING_SYSTEMS.put("XBX", "Xbox");
+        OPERATING_SYSTEMS.put("XBT", "Xubuntu");
+        OPERATING_SYSTEMS.put("YNS", "YunOs");
+        OPERATING_SYSTEMS.put("IOS", "iOS");
+        OPERATING_SYSTEMS.put("POS", "palmOS");
+        OPERATING_SYSTEMS.put("WOS", "webOS");
+        OS_FAMILIES = new HashMap<String, String[]>();
+		OS_FAMILIES.put("Android", new String[]{"AND", "CYN", "REM", "RZD", "MLD", "MCD", "YNS"});
+		OS_FAMILIES.put("AAndroid", new String[]{"AND", "CYN", "REM", "RZD", "MLD", "MCD", "YNS"});
+		OS_FAMILIES.put("AAmigaOS", new String[]{"AMG", "MOR"});
+		OS_FAMILIES.put("Apple TV", new String[]{"ATV"});
+		OS_FAMILIES.put("BlackBerry", new String[]{"BLB", "QNX"});
+		OS_FAMILIES.put("Brew", new String[]{"BMP"});
+		OS_FAMILIES.put("BeOS", new String[]{"BEO", "HAI"});
+		OS_FAMILIES.put("Chrome OS", new String[]{"COS"});
+		OS_FAMILIES.put("Firefox OS", new String[]{"FOS"});
+		OS_FAMILIES.put("Gaming Console", new String[]{"WII", "PS3"});
+		OS_FAMILIES.put("Google TV", new String[]{"GTV"});
+		OS_FAMILIES.put("IBM", new String[]{"OS2"});
+		OS_FAMILIES.put("iOS", new String[]{"IOS"});
+		OS_FAMILIES.put("RISC OS", new String[]{"ROS"});
+		OS_FAMILIES.put("GNU/Linux", new String[]{"LIN", "ARL", "DEB", "KNO", "MIN", "UBT", "KBT", "XBT", "LBT", "FED", "RHT", "VLN", "MDR", "GNT", "SAB", "SLW", "SSE", "CES", "BTR", "SAF"});
+		OS_FAMILIES.put("Mac", new String[]{"MAC"});
+		OS_FAMILIES.put("Mobile Gaming Console", new String[]{"PSP", "NDS", "XBX"});
+		OS_FAMILIES.put("Real-time OS", new String[]{"MTK", "TDX"});
+		OS_FAMILIES.put("Other Mobile", new String[]{"WOS", "POS", "SBA", "TIZ", "SMG", "MAE"});
+		OS_FAMILIES.put("Symbian", new String[]{"SYM", "SYS", "SY3", "S60", "S40"});
+		OS_FAMILIES.put("Unix", new String[]{"SOS", "AIX", "HPX", "BSD", "NBS", "OBS", "DFB", "SYL", "IRI", "T64", "INF"});
+		OS_FAMILIES.put("WebTV", new String[]{"WTV"});
+		OS_FAMILIES.put("Windows", new String[]{"WIN"});
+		OS_FAMILIES.put("Windows Mobile", new String[]{"WPH", "WMO", "WCE", "WRT"});
+	}
 
     public Map<String, String> getAvailableOperatingSystems(){
-        return operatingSystems;
+        return OPERATING_SYSTEMS;
     }
     public Map<String, String[]> getAvailableOperatingSystemFamilies(){
-        return osFamilies;
+        return OS_FAMILIES;
     }
     
     public DetectResult parse(String userAgent){
@@ -158,8 +159,8 @@ public class OperatingSystem extends ParserAbstract {
             return null;
         }
         String name  = this.buildByMatch(osRegex.get("name").toString(), matches);
-        String shortName = "UNK";        
-        for (Entry<String, String> e : this.operatingSystems.entrySet()) {
+        String shortName = UNKNOWN;
+        for (Entry<String, String> e : OPERATING_SYSTEMS.entrySet()) {
         	if (e.getValue().toLowerCase().equals(name.toLowerCase())) {
                 name = e.getValue();
                 shortName = e.getKey();
@@ -169,11 +170,41 @@ public class OperatingSystem extends ParserAbstract {
         ret.setType(this.getType());
         ret.setName(name);
         ret.setShortName(shortName);
-        ret.setVersion(this.buildVersion(osRegex.get("version").toString(), matches));
+        ret.setVersion(this.buildVersionByCaptureGroup(userAgent, osRegex));
         ret.setPlatform(parsePlatform(userAgent));
         return ret;
     }
 
+	/**
+	 * @param userAgent
+	 * @param osRegex
+	 * @return
+	 */
+	private String buildVersionByCaptureGroup(String userAgent, Map<String, Object> osRegex) {
+		Object captureGroup = osRegex.get("version");
+		if(captureGroup!=null) {
+			String captureGroupStr = captureGroup.toString().replaceAll("\\$", "");
+			if(Utils.isNumeric(captureGroupStr)) {
+				Integer cg = Integer.valueOf(captureGroupStr);
+				String regex = osRegex.get("regex").toString();
+				Pattern pattern = Pattern.compile(regex);
+				Matcher matcher = pattern.matcher(userAgent);
+				if(matcher.find() && matcher.groupCount()>=cg) {
+					return matcher.group(cg);
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * cannot get version while using this method
+	 */
+	protected String buildVersion(String versionString, List<String> matches) {
+		return null;
+	}
+	
+	
 	protected String parsePlatform(String userAgent){
 		List<String> matches = null;
 		matches = this.matchUserAgent(userAgent, "arm");
@@ -193,8 +224,8 @@ public class OperatingSystem extends ParserAbstract {
      * @param osLabel
      * @return string
      */
-    public String getOsFamily(String osLabel){
-    	for(Map.Entry<String, String[]> entry : this.osFamilies.entrySet()) {
+    public static String getOsFamily(String osLabel){
+    	for(Map.Entry<String, String[]> entry : OS_FAMILIES.entrySet()) {
 			String family = entry.getKey();
 			String[] array = entry.getValue();
 			for(String label : array) {
@@ -214,7 +245,7 @@ public class OperatingSystem extends ParserAbstract {
      * @return bool|string
      */
     public String getNameFromId(String os, String ver){
-    	String osFullName = this.operatingSystems.get(os);
+    	String osFullName = OPERATING_SYSTEMS.get(os);
         if (!Utils.isEmpty(osFullName)) {
         	osFullName = osFullName + " " + ver;
         	return osFullName.trim();

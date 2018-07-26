@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Set;
 
 import io.driocc.devicedetector.DetectResult;
 import io.driocc.devicedetector.client.engine.Engine;
-import io.driocc.devicedetector.yaml.YamlParser;
+import io.driocc.devicedetector.utils.Utils;
 
 
 /**
@@ -29,226 +31,211 @@ public class Browser extends ClientParserAbstract {
     /**
      * Known browsers mapped to their internal short codes
      */
-    private Map<String, String> availableBrowsers;
+    private static Map<String, String> AVAILABLE_BROWSERS;
     /**
      * Browser families mapped to the short codes of the associated browsers
      */
-    private Map<String, String[]> browserFamilies;
+    private static Map<String, String[]> BROWSER_FAMILIES;
     /**
      * Browsers that are available for mobile devices only
      */
-    private List<String> mobileOnlyBrowsers;
-    private Browser(){
-    	super();
-		this.setType(PARSER);
-		this.setYaml(FIXTURE_FILE);
-		this.setRegexes(YamlParser.get(this.getYaml()));
-    	availableBrowsers = new HashMap<>();
-        availableBrowsers.put("36","360 Phone Browser");
-        availableBrowsers.put("3B","360 Browser");
-        availableBrowsers.put("AA","Avant Browser");
-        availableBrowsers.put("AB","ABrowse");
-        availableBrowsers.put("AF","ANT Fresco");
-        availableBrowsers.put("AG","ANTGalio");
-        availableBrowsers.put("AL","Aloha Browser");
-        availableBrowsers.put("AM","Amaya");
-        availableBrowsers.put("AO","Amigo");
-        availableBrowsers.put("AN","Android Browser");
-        availableBrowsers.put("AR","Arora");
-        availableBrowsers.put("AV","Amiga Voyager");
-        availableBrowsers.put("AW","Amiga Aweb");
-        availableBrowsers.put("AT","Atomic Web Browser");
-        availableBrowsers.put("BB","BlackBerry Browser");
-        availableBrowsers.put("BD","Baidu Browser");
-        availableBrowsers.put("BS","Baidu Spark");
-        availableBrowsers.put("BE","Beonex");
-        availableBrowsers.put("BJ","Bunjalloo");
-        availableBrowsers.put("BL","B-Line");
-        availableBrowsers.put("BR","Brave");
-        availableBrowsers.put("BK","BriskBard");
-        availableBrowsers.put("BX","BrowseX");
-        availableBrowsers.put("CA","Camino");
-        availableBrowsers.put("CC","Coc Coc");
-        availableBrowsers.put("CD","Comodo Dragon");
-        availableBrowsers.put("C1","Coast");
-        availableBrowsers.put("CX","Charon");
-        availableBrowsers.put("CF","Chrome Frame");
-        availableBrowsers.put("CH","Chrome");
-        availableBrowsers.put("CI","Chrome Mobile iOS");
-        availableBrowsers.put("CK","Conkeror");
-        availableBrowsers.put("CM","Chrome Mobile");
-        availableBrowsers.put("CN","CoolNovo");
-        availableBrowsers.put("CO","CometBird");
-        availableBrowsers.put("CP","ChromePlus");
-        availableBrowsers.put("CR","Chromium");
-        availableBrowsers.put("CY","Cyberfox");
-        availableBrowsers.put("CS","Cheshire");
-        availableBrowsers.put("DB","dbrowser");
-        availableBrowsers.put("DE","Deepnet Explorer");
-        availableBrowsers.put("DF","Dolphin");
-        availableBrowsers.put("DO","Dorado");
-        availableBrowsers.put("DL","Dooble");
-        availableBrowsers.put("DI","Dillo");
-        availableBrowsers.put("EI","Epic");
-        availableBrowsers.put("EL","Elinks");
-        availableBrowsers.put("EB","Element Browser");
-        availableBrowsers.put("EP","GNOME Web");
-        availableBrowsers.put("ES","Espial TV Browser");
-        availableBrowsers.put("FB","Firebird");
-        availableBrowsers.put("FD","Fluid");
-        availableBrowsers.put("FE","Fennec");
-        availableBrowsers.put("FF","Firefox");
-        availableBrowsers.put("FL","Flock");
-        availableBrowsers.put("FM","Firefox Mobile");
-        availableBrowsers.put("FW","Fireweb");
-        availableBrowsers.put("FN","Fireweb Navigator");
-        availableBrowsers.put("GA","Galeon");
-        availableBrowsers.put("GE","Google Earth");
-        availableBrowsers.put("HJ","HotJava");
-        availableBrowsers.put("IA","Iceape");
-        availableBrowsers.put("IB","IBrowse");
-        availableBrowsers.put("IC","iCab");
-        availableBrowsers.put("I2","iCab Mobile");
-        availableBrowsers.put("I1","Iridium");
-        availableBrowsers.put("ID","IceDragon");
-        availableBrowsers.put("IV","Isivioo");
-        availableBrowsers.put("IW","Iceweasel");
-        availableBrowsers.put("IE","Internet Explorer");
-        availableBrowsers.put("IM","IE Mobile");
-        availableBrowsers.put("IR","Iron");
-        availableBrowsers.put("JS","Jasmine");
-        availableBrowsers.put("JI","Jig Browser");
-        availableBrowsers.put("KI","Kindle Browser");
-        availableBrowsers.put("KM","K-meleon");
-        availableBrowsers.put("KO","Konqueror");
-        availableBrowsers.put("KP","Kapiko");
-        availableBrowsers.put("KY","Kylo");
-        availableBrowsers.put("KZ","Kazehakase");
-        availableBrowsers.put("LB","Liebao");
-        availableBrowsers.put("LG","LG Browser");
-        availableBrowsers.put("LI","Links");
-        availableBrowsers.put("LU","LuaKit");
-        availableBrowsers.put("LS","Lunascape");
-        availableBrowsers.put("LX","Lynx");
-        availableBrowsers.put("MB","MicroB");
-        availableBrowsers.put("MC","NCSA Mosaic");
-        availableBrowsers.put("ME","Mercury");
-        availableBrowsers.put("MF","Mobile Safari");
-        availableBrowsers.put("MI","Midori");
-        availableBrowsers.put("MU","MIUI Browser");
-        availableBrowsers.put("MS","Mobile Silk");
-        availableBrowsers.put("MX","Maxthon");
-        availableBrowsers.put("NB","Nokia Browser");
-        availableBrowsers.put("NO","Nokia OSS Browser");
-        availableBrowsers.put("NV","Nokia Ovi Browser");
-        availableBrowsers.put("NF","NetFront");
-        availableBrowsers.put("NL","NetFront Life");
-        availableBrowsers.put("NP","NetPositive");
-        availableBrowsers.put("NS","Netscape");
-        availableBrowsers.put("OB","Obigo");
-        availableBrowsers.put("OD","Odyssey Web Browser");
-        availableBrowsers.put("OF","Off By One");
-        availableBrowsers.put("OE","ONE Browser");
-        availableBrowsers.put("OI","Opera Mini");
-        availableBrowsers.put("OM","Opera Mobile");
-        availableBrowsers.put("OP","Opera");
-        availableBrowsers.put("ON","Opera Next");
-        availableBrowsers.put("OR","Oregano");
-        availableBrowsers.put("OV","Openwave Mobile Browser");
-        availableBrowsers.put("OW","OmniWeb");
-        availableBrowsers.put("OT","Otter Browser");
-        availableBrowsers.put("PL","Palm Blazer");
-        availableBrowsers.put("PM","Pale Moon");
-        availableBrowsers.put("PR","Palm Pre");
-        availableBrowsers.put("PU","Puffin");
-        availableBrowsers.put("PW","Palm WebPro");
-        availableBrowsers.put("PA","Palmscape");
-        availableBrowsers.put("PX","Phoenix");
-        availableBrowsers.put("PO","Polaris");
-        availableBrowsers.put("PT","Polarity");
-        availableBrowsers.put("PS","Microsoft Edge");
-        availableBrowsers.put("QQ","QQ Browser");
-        availableBrowsers.put("QT","Qutebrowser");
-        availableBrowsers.put("QZ","QupZilla");
-        availableBrowsers.put("RK","Rekonq");
-        availableBrowsers.put("RM","RockMelt");
-        availableBrowsers.put("SB","Samsung Browser");
-        availableBrowsers.put("SA","Sailfish Browser");
-        availableBrowsers.put("SC","SEMC-Browser");
-        availableBrowsers.put("SE","Sogou Explorer");
-        availableBrowsers.put("SF","Safari");
-        availableBrowsers.put("SH","Shiira");
-        availableBrowsers.put("SK","Skyfire");
-        availableBrowsers.put("SS","Seraphic Sraf");
-        availableBrowsers.put("SL","Sleipnir");
-        availableBrowsers.put("SM","SeaMonkey");
-        availableBrowsers.put("SN","Snowshoe");
-        availableBrowsers.put("SR","Sunrise");
-        availableBrowsers.put("SP","SuperBird");
-        availableBrowsers.put("ST","Streamy");
-        availableBrowsers.put("SX","Swiftfox");
-        availableBrowsers.put("TZ","Tizen Browser");
-        availableBrowsers.put("TS","TweakStyle");
-        availableBrowsers.put("UC","UC Browser");
-        availableBrowsers.put("VI","Vivaldi");
-        availableBrowsers.put("VB","Vision Mobile Browser");
-        availableBrowsers.put("WE","WebPositive");
-        availableBrowsers.put("WF","Waterfox");
-        availableBrowsers.put("WO","wOSBrowser");
-        availableBrowsers.put("WT","WeTab Browser");
-        availableBrowsers.put("YA","Yandex Browser");
-        availableBrowsers.put("XI","Xiino");
+    private static List<String> MOBILE_ONLY_BROWSERS;
+    private Engine engineParser;
+    public Browser(){
+    	super(PARSER, FIXTURE_FILE);
+    	engineParser = new Engine();
+    }
+    public Browser(String type, String file){
+    	super(type, file);
+    	engineParser = new Engine();
+    }
+    static {
+    	AVAILABLE_BROWSERS = new HashMap<>();
+        AVAILABLE_BROWSERS.put("36","360 Phone Browser");
+        AVAILABLE_BROWSERS.put("3B","360 Browser");
+        AVAILABLE_BROWSERS.put("AA","Avant Browser");
+        AVAILABLE_BROWSERS.put("AB","ABrowse");
+        AVAILABLE_BROWSERS.put("AF","ANT Fresco");
+        AVAILABLE_BROWSERS.put("AG","ANTGalio");
+        AVAILABLE_BROWSERS.put("AL","Aloha Browser");
+        AVAILABLE_BROWSERS.put("AM","Amaya");
+        AVAILABLE_BROWSERS.put("AO","Amigo");
+        AVAILABLE_BROWSERS.put("AN","Android Browser");
+        AVAILABLE_BROWSERS.put("AR","Arora");
+        AVAILABLE_BROWSERS.put("AV","Amiga Voyager");
+        AVAILABLE_BROWSERS.put("AW","Amiga Aweb");
+        AVAILABLE_BROWSERS.put("AT","Atomic Web Browser");
+        AVAILABLE_BROWSERS.put("BB","BlackBerry Browser");
+        AVAILABLE_BROWSERS.put("BD","Baidu Browser");
+        AVAILABLE_BROWSERS.put("BS","Baidu Spark");
+        AVAILABLE_BROWSERS.put("BE","Beonex");
+        AVAILABLE_BROWSERS.put("BJ","Bunjalloo");
+        AVAILABLE_BROWSERS.put("BL","B-Line");
+        AVAILABLE_BROWSERS.put("BR","Brave");
+        AVAILABLE_BROWSERS.put("BK","BriskBard");
+        AVAILABLE_BROWSERS.put("BX","BrowseX");
+        AVAILABLE_BROWSERS.put("CA","Camino");
+        AVAILABLE_BROWSERS.put("CC","Coc Coc");
+        AVAILABLE_BROWSERS.put("CD","Comodo Dragon");
+        AVAILABLE_BROWSERS.put("C1","Coast");
+        AVAILABLE_BROWSERS.put("CX","Charon");
+        AVAILABLE_BROWSERS.put("CF","Chrome Frame");
+        AVAILABLE_BROWSERS.put("CH","Chrome");
+        AVAILABLE_BROWSERS.put("CI","Chrome Mobile iOS");
+        AVAILABLE_BROWSERS.put("CK","Conkeror");
+        AVAILABLE_BROWSERS.put("CM","Chrome Mobile");
+        AVAILABLE_BROWSERS.put("CN","CoolNovo");
+        AVAILABLE_BROWSERS.put("CO","CometBird");
+        AVAILABLE_BROWSERS.put("CP","ChromePlus");
+        AVAILABLE_BROWSERS.put("CR","Chromium");
+        AVAILABLE_BROWSERS.put("CY","Cyberfox");
+        AVAILABLE_BROWSERS.put("CS","Cheshire");
+        AVAILABLE_BROWSERS.put("DB","dbrowser");
+        AVAILABLE_BROWSERS.put("DE","Deepnet Explorer");
+        AVAILABLE_BROWSERS.put("DF","Dolphin");
+        AVAILABLE_BROWSERS.put("DO","Dorado");
+        AVAILABLE_BROWSERS.put("DL","Dooble");
+        AVAILABLE_BROWSERS.put("DI","Dillo");
+        AVAILABLE_BROWSERS.put("EI","Epic");
+        AVAILABLE_BROWSERS.put("EL","Elinks");
+        AVAILABLE_BROWSERS.put("EB","Element Browser");
+        AVAILABLE_BROWSERS.put("EP","GNOME Web");
+        AVAILABLE_BROWSERS.put("ES","Espial TV Browser");
+        AVAILABLE_BROWSERS.put("FB","Firebird");
+        AVAILABLE_BROWSERS.put("FD","Fluid");
+        AVAILABLE_BROWSERS.put("FE","Fennec");
+        AVAILABLE_BROWSERS.put("FF","Firefox");
+        AVAILABLE_BROWSERS.put("FL","Flock");
+        AVAILABLE_BROWSERS.put("FM","Firefox Mobile");
+        AVAILABLE_BROWSERS.put("FW","Fireweb");
+        AVAILABLE_BROWSERS.put("FN","Fireweb Navigator");
+        AVAILABLE_BROWSERS.put("GA","Galeon");
+        AVAILABLE_BROWSERS.put("GE","Google Earth");
+        AVAILABLE_BROWSERS.put("HJ","HotJava");
+        AVAILABLE_BROWSERS.put("IA","Iceape");
+        AVAILABLE_BROWSERS.put("IB","IBrowse");
+        AVAILABLE_BROWSERS.put("IC","iCab");
+        AVAILABLE_BROWSERS.put("I2","iCab Mobile");
+        AVAILABLE_BROWSERS.put("I1","Iridium");
+        AVAILABLE_BROWSERS.put("ID","IceDragon");
+        AVAILABLE_BROWSERS.put("IV","Isivioo");
+        AVAILABLE_BROWSERS.put("IW","Iceweasel");
+        AVAILABLE_BROWSERS.put("IE","Internet Explorer");
+        AVAILABLE_BROWSERS.put("IM","IE Mobile");
+        AVAILABLE_BROWSERS.put("IR","Iron");
+        AVAILABLE_BROWSERS.put("JS","Jasmine");
+        AVAILABLE_BROWSERS.put("JI","Jig Browser");
+        AVAILABLE_BROWSERS.put("KI","Kindle Browser");
+        AVAILABLE_BROWSERS.put("KM","K-meleon");
+        AVAILABLE_BROWSERS.put("KO","Konqueror");
+        AVAILABLE_BROWSERS.put("KP","Kapiko");
+        AVAILABLE_BROWSERS.put("KY","Kylo");
+        AVAILABLE_BROWSERS.put("KZ","Kazehakase");
+        AVAILABLE_BROWSERS.put("LB","Liebao");
+        AVAILABLE_BROWSERS.put("LG","LG Browser");
+        AVAILABLE_BROWSERS.put("LI","Links");
+        AVAILABLE_BROWSERS.put("LU","LuaKit");
+        AVAILABLE_BROWSERS.put("LS","Lunascape");
+        AVAILABLE_BROWSERS.put("LX","Lynx");
+        AVAILABLE_BROWSERS.put("MB","MicroB");
+        AVAILABLE_BROWSERS.put("MC","NCSA Mosaic");
+        AVAILABLE_BROWSERS.put("ME","Mercury");
+        AVAILABLE_BROWSERS.put("MF","Mobile Safari");
+        AVAILABLE_BROWSERS.put("MI","Midori");
+        AVAILABLE_BROWSERS.put("MU","MIUI Browser");
+        AVAILABLE_BROWSERS.put("MS","Mobile Silk");
+        AVAILABLE_BROWSERS.put("MX","Maxthon");
+        AVAILABLE_BROWSERS.put("NB","Nokia Browser");
+        AVAILABLE_BROWSERS.put("NO","Nokia OSS Browser");
+        AVAILABLE_BROWSERS.put("NV","Nokia Ovi Browser");
+        AVAILABLE_BROWSERS.put("NF","NetFront");
+        AVAILABLE_BROWSERS.put("NL","NetFront Life");
+        AVAILABLE_BROWSERS.put("NP","NetPositive");
+        AVAILABLE_BROWSERS.put("NS","Netscape");
+        AVAILABLE_BROWSERS.put("OB","Obigo");
+        AVAILABLE_BROWSERS.put("OD","Odyssey Web Browser");
+        AVAILABLE_BROWSERS.put("OF","Off By One");
+        AVAILABLE_BROWSERS.put("OE","ONE Browser");
+        AVAILABLE_BROWSERS.put("OI","Opera Mini");
+        AVAILABLE_BROWSERS.put("OM","Opera Mobile");
+        AVAILABLE_BROWSERS.put("OP","Opera");
+        AVAILABLE_BROWSERS.put("ON","Opera Next");
+        AVAILABLE_BROWSERS.put("OR","Oregano");
+        AVAILABLE_BROWSERS.put("OV","Openwave Mobile Browser");
+        AVAILABLE_BROWSERS.put("OW","OmniWeb");
+        AVAILABLE_BROWSERS.put("OT","Otter Browser");
+        AVAILABLE_BROWSERS.put("PL","Palm Blazer");
+        AVAILABLE_BROWSERS.put("PM","Pale Moon");
+        AVAILABLE_BROWSERS.put("PR","Palm Pre");
+        AVAILABLE_BROWSERS.put("PU","Puffin");
+        AVAILABLE_BROWSERS.put("PW","Palm WebPro");
+        AVAILABLE_BROWSERS.put("PA","Palmscape");
+        AVAILABLE_BROWSERS.put("PX","Phoenix");
+        AVAILABLE_BROWSERS.put("PO","Polaris");
+        AVAILABLE_BROWSERS.put("PT","Polarity");
+        AVAILABLE_BROWSERS.put("PS","Microsoft Edge");
+        AVAILABLE_BROWSERS.put("QQ","QQ Browser");
+        AVAILABLE_BROWSERS.put("QT","Qutebrowser");
+        AVAILABLE_BROWSERS.put("QZ","QupZilla");
+        AVAILABLE_BROWSERS.put("RK","Rekonq");
+        AVAILABLE_BROWSERS.put("RM","RockMelt");
+        AVAILABLE_BROWSERS.put("SB","Samsung Browser");
+        AVAILABLE_BROWSERS.put("SA","Sailfish Browser");
+        AVAILABLE_BROWSERS.put("SC","SEMC-Browser");
+        AVAILABLE_BROWSERS.put("SE","Sogou Explorer");
+        AVAILABLE_BROWSERS.put("SF","Safari");
+        AVAILABLE_BROWSERS.put("SH","Shiira");
+        AVAILABLE_BROWSERS.put("SK","Skyfire");
+        AVAILABLE_BROWSERS.put("SS","Seraphic Sraf");
+        AVAILABLE_BROWSERS.put("SL","Sleipnir");
+        AVAILABLE_BROWSERS.put("SM","SeaMonkey");
+        AVAILABLE_BROWSERS.put("SN","Snowshoe");
+        AVAILABLE_BROWSERS.put("SR","Sunrise");
+        AVAILABLE_BROWSERS.put("SP","SuperBird");
+        AVAILABLE_BROWSERS.put("ST","Streamy");
+        AVAILABLE_BROWSERS.put("SX","Swiftfox");
+        AVAILABLE_BROWSERS.put("TZ","Tizen Browser");
+        AVAILABLE_BROWSERS.put("TS","TweakStyle");
+        AVAILABLE_BROWSERS.put("UC","UC Browser");
+        AVAILABLE_BROWSERS.put("VI","Vivaldi");
+        AVAILABLE_BROWSERS.put("VB","Vision Mobile Browser");
+        AVAILABLE_BROWSERS.put("WE","WebPositive");
+        AVAILABLE_BROWSERS.put("WF","Waterfox");
+        AVAILABLE_BROWSERS.put("WO","wOSBrowser");
+        AVAILABLE_BROWSERS.put("WT","WeTab Browser");
+        AVAILABLE_BROWSERS.put("YA","Yandex Browser");
+        AVAILABLE_BROWSERS.put("XI","Xiino");
         
         /**
          * Browser families mapped to the short codes of the associated browsers
          *
          * @var array
          */
-        browserFamilies = new HashMap<>();        
-        browserFamilies.put("Android Browser",   new String[] {"AN", "MU"});
-        browserFamilies.put("BlackBerry Browser",new String[] {"BB"});
-        browserFamilies.put("Baidu",             new String[] {"BD", "BS"});
-        browserFamilies.put("Amiga",             new String[] {"AV", "AW"});
-        browserFamilies.put("Chrome",            new String[] {"CH", "BR", "CC", "CD", "CM", "CI", "CF", "CN", "CR", "CP", "IR", "RM", "AO", "TS", "VI", "PT"});
-        browserFamilies.put("Firefox",           new String[] {"FF", "FE", "FM", "SX", "FB", "PX", "MB", "EI", "WF"});
-        browserFamilies.put("Internet Explorer", new String[] {"IE", "IM", "PS"});
-        browserFamilies.put("Konqueror",         new String[] {"KO"});
-        browserFamilies.put("NetFront",          new String[] {"NF"});
-        browserFamilies.put("Nokia Browser",     new String[] {"NB", "NO", "NV", "DO"});
-        browserFamilies.put("Opera",             new String[] {"OP", "OM", "OI", "ON"});
-        browserFamilies.put("Safari",            new String[] {"SF", "MF"});
-        browserFamilies.put("Sailfish Browser",  new String[] {"SA"});
+        BROWSER_FAMILIES = new HashMap<>();        
+        BROWSER_FAMILIES.put("Android Browser",   new String[] {"AN", "MU"});
+        BROWSER_FAMILIES.put("BlackBerry Browser",new String[] {"BB"});
+        BROWSER_FAMILIES.put("Baidu",             new String[] {"BD", "BS"});
+        BROWSER_FAMILIES.put("Amiga",             new String[] {"AV", "AW"});
+        BROWSER_FAMILIES.put("Chrome",            new String[] {"CH", "BR", "CC", "CD", "CM", "CI", "CF", "CN", "CR", "CP", "IR", "RM", "AO", "TS", "VI", "PT"});
+        BROWSER_FAMILIES.put("Firefox",           new String[] {"FF", "FE", "FM", "SX", "FB", "PX", "MB", "EI", "WF"});
+        BROWSER_FAMILIES.put("Internet Explorer", new String[] {"IE", "IM", "PS"});
+        BROWSER_FAMILIES.put("Konqueror",         new String[] {"KO"});
+        BROWSER_FAMILIES.put("NetFront",          new String[] {"NF"});
+        BROWSER_FAMILIES.put("Nokia Browser",     new String[] {"NB", "NO", "NV", "DO"});
+        BROWSER_FAMILIES.put("Opera",             new String[] {"OP", "OM", "OI", "ON"});
+        BROWSER_FAMILIES.put("Safari",            new String[] {"SF", "MF"});
+        BROWSER_FAMILIES.put("Sailfish Browser",  new String[] {"SA"});
         
-        mobileOnlyBrowsers = Arrays.asList(new String[] {
+        MOBILE_ONLY_BROWSERS = Arrays.asList(new String[] {
                 "36", "PU", "SK", "MF", "OI", "OM", "DB", "ST", "BL", "IV", "FM", "C1", "AL"});
     };
-    private static class LazyHolder {
-        static final Browser INSTANCE = new Browser();
-    }
 
-    public static Browser getInstance() {
-        return LazyHolder.INSTANCE;
-    }
-    /**
-     * Returns list of all available browsers
-     * @return array
-     */
-    public Map<String, String> getAvailableBrowsers(){
-        return availableBrowsers;
-    }
-    /**
-     * Returns list of all available browser families
-     * @return array
-     */
-    public Map<String, String[]> getAvailableBrowserFamilies(){
-        return this.browserFamilies;
-    }
     /**
      * @param browserLabel
      * @return
      */
-    public String getBrowserFamily(String browserLabel){
-    	for(Entry<String, String[]> e : this.browserFamilies.entrySet()) {
+    public static String getBrowserFamily(String browserLabel){
+    	for(Entry<String, String[]> e : BROWSER_FAMILIES.entrySet()) {
     		String[] labels = e.getValue();
         	if(labels==null)return null;
             for (String label : labels) {
@@ -265,13 +252,14 @@ public class Browser extends ClientParserAbstract {
      * @param string $browser  Label or name of browser
      * @return bool
      */
-    public boolean isMobileOnlyBrowser(String browser){
-    	if(this.mobileOnlyBrowsers.contains(browser)) {
+    public static boolean isMobileOnlyBrowser(String browser){
+    	if(Utils.isEmpty(browser))return false; 
+    	if(MOBILE_ONLY_BROWSERS.contains(browser)) {
     		return true;
     	}
-    	for(Entry<String, String> e : availableBrowsers.entrySet()) {
+    	for(Entry<String, String> e : AVAILABLE_BROWSERS.entrySet()) {
     		if(e.getValue().equals(browser)) {
-    			if(this.mobileOnlyBrowsers.contains(e.getKey())){
+    			if(MOBILE_ONLY_BROWSERS.contains(e.getKey())){
     				return true;
     			}
     		}
@@ -293,9 +281,9 @@ public class Browser extends ClientParserAbstract {
         }
         String name = this.buildByMatch(currentRegexObj.get("name").toString(), matches);
         DetectResult ret = null;
-        for(Entry<String, String> browserShort : this.getAvailableBrowsers().entrySet()) {        	 
+        for(Entry<String, String> browserShort : AVAILABLE_BROWSERS.entrySet()) {        	 
             if (name.toLowerCase().equals(browserShort.getValue().toLowerCase())) {
-                String version = this.buildVersion(currentRegexObj.get("version").toString(), matches);
+                String version = this.buildVersionByCaptureGroup(userAgent, currentRegexObj);
                 DetectResult engine = null;
                 ret = new DetectResult();
                 ret.setType("browser");
@@ -330,19 +318,27 @@ public class Browser extends ClientParserAbstract {
 			versionList.sort(new Comparator<Object>() {
 				@Override
 				public int compare(Object o1, Object o2) {
-					return Browser.versionCompare(o1.toString(), o2.toString());
+					return Utils.versionCompare(o1.toString(), o2.toString());
 			}});
 			for(Object version : versionList) {
-	            if (versionCompare(browserVersion, version.toString()) >= 0) {
-	                engine = versions.get(version).toString();
-	                ver = version.toString();
+				String versionStr = version.toString();
+	            if (Utils.versionCompare(browserVersion, versionStr) >= 0) {	            	
+	            	//System.out.println(browserVersion + " vs " + version.toString());
+	            	//get the left part and compare, true if equal
+	            	String browserVersionLeft = browserVersion.contains(".")?browserVersion.split("\\.")[0]:browserVersion;
+	            	String versionLeft = versionStr.contains(".")?versionStr.split(".")[0]:versionStr;
+	            	if(Utils.isNumeric(browserVersionLeft) && Utils.isNumeric(versionLeft)) {
+	            		if(Integer.valueOf(browserVersionLeft).compareTo(Integer.valueOf(versionLeft))==0) {
+	            			engine = versions.get(version).toString();
+	    	                ver = version.toString();
+	            		}
+	            	}
 	            }
 			}
         }
         // try to detect the engine using the regexes
         if (engine==null || "".equals(engine)) {
-            Engine ee = Engine.getInstance();
-            ret = ee.parse(userAgent);
+            ret = engineParser.parse(userAgent);
         } else {
         	ret = new DetectResult();
         	ret.setEngine(engine);
@@ -350,28 +346,25 @@ public class Browser extends ClientParserAbstract {
         }
         return ret;
     }
-    /**
-	 * @param browserVersion
-	 * @param version
-	 * @return
-	 */
-	private static int versionCompare(String browserVersion, String version) {
-		String[] vals1 = browserVersion.split("\\.");
-	    String[] vals2 = version.split("\\.");
-	    int i = 0;
-	    // set index to first non-equal ordinal or length of shortest version string
-	    while (i < vals1.length && i < vals2.length && vals1[i].equals(vals2[i])) {
-	      i++;
-	    }
-	    // compare first non-equal ordinal number
-	    if (i < vals1.length && i < vals2.length) {
-	        int diff = Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(vals2[i]));
-	        return Integer.signum(diff);
-	    }
-	    // the strings are equal or one string is a substring of the other
-	    // e.g. "1.2.3" = "1.2.3" or "1.2.3" < "1.2.3.4"
-	    return Integer.signum(vals1.length - vals2.length);
+   
+    
+	private String buildVersionByCaptureGroup(String userAgent, Map<String, Object> regexObj) {
+		Object captureGroup = regexObj.get("version");
+		if(captureGroup!=null) {
+			String captureGroupStr = captureGroup.toString().replaceAll("\\$", "");
+			if(Utils.isNumeric(captureGroupStr)) {
+				Integer cg = Integer.valueOf(captureGroupStr);
+				String regex = regexObj.get("regex").toString();
+				Pattern pattern = Pattern.compile(regex);
+				Matcher matcher = pattern.matcher(userAgent);
+				if(matcher.find() && matcher.groupCount()>=cg) {
+					return matcher.group(cg);
+				}
+			}
+		}
+		return null;
 	}
+
 	/**
 	 * we don't need this function
 	 * @param userAgent

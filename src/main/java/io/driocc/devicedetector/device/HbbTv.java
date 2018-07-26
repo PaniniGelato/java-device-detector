@@ -4,7 +4,6 @@
 package io.driocc.devicedetector.device;
 
 import io.driocc.devicedetector.DetectResult;
-import io.driocc.devicedetector.yaml.YamlParser;
 
 /**
  * @author kyon
@@ -16,13 +15,20 @@ public class HbbTv extends DeviceParserAbstract {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final String FIXTURE_FILE = "regexes/device/televisions.yml";
-    
-    private HbbTv(){
-    	super();
-    	this.setType("tv");
-    	this.setRegexes(YamlParser.get(FIXTURE_FILE));
+	private static final String PARSER = "tv";
+    public HbbTv(){
+    	super(PARSER, FIXTURE_FILE);
     }
-    
+    public HbbTv(String type, String file){
+    	super(type, file);
+    }
+    private static class LazyHolder {
+        static final HbbTv INSTANCE = new HbbTv();
+    }
+
+    public static HbbTv getInstance() {
+        return LazyHolder.INSTANCE;
+    }
     public DetectResult parse(String userAgent) {
         if (this.preMatchOverall(userAgent)) {
             return null;

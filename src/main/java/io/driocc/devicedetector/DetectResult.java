@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class DetectResult implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	//for client
 	private String type;
 	private String name;
 	private String shortName;
@@ -19,6 +20,15 @@ public class DetectResult implements Serializable {
 	private String platform;
 	private String engine;
 	private String engineVersion;
+	//for device
+	private String device;
+	private Integer deviceType;
+	private String brand;
+	private String brandId;
+	private String model;
+	//for bot
+	private boolean isBot;
+	private BotDetail botDetail;
 	/**
 	 * @return the name
 	 */
@@ -102,5 +112,89 @@ public class DetectResult implements Serializable {
 	 */
 	public void setEngineVersion(String engineVersion) {
 		this.engineVersion = engineVersion;
+	}
+	/**
+	 * @return the device
+	 */
+	public String getDevice() {
+		return device;
+	}
+	/**
+	 * @param device the device to set
+	 */
+	public void setDevice(String device) {
+		this.device = device;
+	}
+	/**
+	 * @return the brand
+	 */
+	public String getBrand() {
+		return brand;
+	}
+	/**
+	 * @param brand the brand to set
+	 */
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+	/**
+	 * @return the brandId
+	 */
+	public String getBrandId() {
+		return brandId;
+	}
+	/**
+	 * @param brandId the brandId to set
+	 */
+	public void setBrandId(String brandId) {
+		this.brandId = brandId;
+	}
+	/**
+	 * @return the model
+	 */
+	public String getModel() {
+		return model;
+	}
+	/**
+	 * @param model the model to set
+	 */
+	public void setModel(String model) {
+		this.model = model;
+	}
+	/**
+	 * @return the isBot
+	 */
+	public boolean isBot() {
+		return isBot;
+	}
+	/**
+	 * @param isBot the isBot to set
+	 */
+	public void setBot(boolean isBot) {
+		this.isBot = isBot;
+	}
+	/**
+	 * @return the botDetail
+	 */
+	public BotDetail getBotDetail() {
+		return botDetail;
+	}
+	/**
+	 * @param botDetail the botDetail to set
+	 */
+	public void setBotDetail(BotDetail botDetail) {
+		this.botDetail = botDetail;
+	}
+	/**
+	 * @return the deviceType
+	 */
+	public Integer getDeviceType() {
+		return deviceType;
+	}
+	/**
+	 * @param deviceType the deviceType to set
+	 */
+	public void setDeviceType(Integer deviceType) {
+		this.deviceType = deviceType;
 	}
 }

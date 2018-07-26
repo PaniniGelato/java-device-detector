@@ -2,12 +2,17 @@ package io.driocc.devicedetector;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Joiner;
+
+import io.driocc.devicedetector.custom.VersionConsultant;
 import io.driocc.devicedetector.utils.Utils;
+import io.driocc.devicedetector.yaml.YamlParser;
 
 public abstract class ParserAbstract implements Serializable {
 
@@ -16,6 +21,13 @@ public abstract class ParserAbstract implements Serializable {
 	private String type;
 	private String yaml;
 	private List<Map<String, Object>> regexes;
+	private VersionConsultant versionConsultant;
+    public ParserAbstract(String type, String file) {
+    	this.setType(type);
+    	this.setYaml(file);
+    	this.setRegexes(YamlParser.get(file));
+    	this.versionConsultant = new VersionConsultant();
+    }
 	/**
 	 * @return the type
 	 */
@@ -60,7 +72,7 @@ public abstract class ParserAbstract implements Serializable {
 		}
 		String reg = "(?:^|[^A-Z0-9\\-_]|[^A-Z0-9\\-]_|sprd-)(?:" + regex + ")";
 		Pattern pattern = Pattern.compile(reg);
-		Matcher matcher = pattern.matcher(userAgent);		
+		Matcher matcher = pattern.matcher(userAgent);
 		while(matcher.find()) {
 			matchs.add(matcher.group());
 		}
@@ -104,11 +116,12 @@ public abstract class ParserAbstract implements Serializable {
     protected String buildVersion(String versionString, List<String> matches) {
 		String ver = buildByMatch(versionString, matches);
 		ver = Utils.isEmpty(ver) ? "" : ver;
-		ver = ver.replaceAll("_", ".");
-		int index = ver.indexOf("/");
-		if(index != -1) {
-			return ver.substring(index+1);
-		}
+		Integer maxMinorParts = this.versionConsultant.getMaxMinorParts();
+		if (maxMinorParts!=null && Utils.countChar(versionString, '.') > maxMinorParts) {
+            String[] versionParts = versionString.split(".");
+            List<String> newVersionPartsList = Arrays.asList(versionParts).subList(0, maxMinorParts + 1);
+            ver = Joiner.on(".").join(newVersionPartsList);
+        }
 		return ver;
 	}
     
