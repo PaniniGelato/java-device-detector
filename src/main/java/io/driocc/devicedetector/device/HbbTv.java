@@ -22,13 +22,6 @@ public class HbbTv extends DeviceParserAbstract {
     public HbbTv(String type, String file){
     	super(type, file);
     }
-    private static class LazyHolder {
-        static final HbbTv INSTANCE = new HbbTv();
-    }
-
-    public static HbbTv getInstance() {
-        return LazyHolder.INSTANCE;
-    }
     public DetectResult parse(String userAgent) {
         if (this.preMatchOverall(userAgent)) {
             return null;

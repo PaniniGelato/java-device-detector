@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import io.driocc.devicedetector.client.Browser;
 import io.driocc.devicedetector.client.ClientParserAbstract;
 import io.driocc.devicedetector.client.FeedReader;
@@ -25,7 +27,7 @@ import io.driocc.devicedetector.device.Mobile;
 import io.driocc.devicedetector.device.PortableMediaPlayer;
 import io.driocc.devicedetector.utils.Utils;
 
-
+@ThreadSafe
 public class DeviceDetector implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -226,10 +228,10 @@ public class DeviceDetector implements Serializable {
 	        	ret.setBrandId(brandId);
         	}
         }
-        String osShortName = os.getShortName();
+        String osShortName = os!=null?os.getShortName():null;
         String osFamily = OperatingSystem.getOsFamily(osShortName);
-        String osVersion = os.getVersion();
-        String clientName = client.getName();
+        String osVersion = os!=null?os.getVersion():null;
+        String clientName = client!=null?client.getName():null;
         /**
          * Assume all devices running iOS / Mac OS are from Apple
          */
@@ -315,7 +317,7 @@ public class DeviceDetector implements Serializable {
         	deviceType = DeviceParserAbstract.DEVICE_TYPE_TV;
         }
         // set device type to desktop for all devices running a desktop os that were not detected as an other device type
-        if (Utils.isEmpty(device) && DetectConsultant.isDesktop(osShortName, client.getType(), client.getShortName())) {
+        if (Utils.isEmpty(device) && client!=null && DetectConsultant.isDesktop(osShortName, client.getType(), client.getShortName())) {
             deviceType = DeviceParserAbstract.DEVICE_TYPE_DESKTOP;
         }
         if(deviceType!=null) {

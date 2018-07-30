@@ -387,9 +387,6 @@ public class DeviceParserAbstract extends ParserAbstract {
         for (Map.Entry<String, Object> e : regexes.entrySet()) {        	
         	Map<String,Object> regex = (Map)e.getValue();
             matches = this.matchUserAgent(userAgent, regex.get("regex").toString());
-//            if(regex.get("model").toString().equals("Xperia XZ1")) {
-//            	System.out.println("123");
-//            }
             if (matches!=null && matches.size()>0) {
             	thisRegex = regex;
             	brand = e.getKey();

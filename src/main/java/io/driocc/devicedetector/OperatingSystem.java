@@ -181,20 +181,28 @@ public class OperatingSystem extends ParserAbstract {
 	 * @return
 	 */
 	private String buildVersionByCaptureGroup(String userAgent, Map<String, Object> osRegex) {
-		Object captureGroup = osRegex.get("version");
-		if(captureGroup!=null) {
-			String captureGroupStr = captureGroup.toString().replaceAll("\\$", "");
-			if(Utils.isNumeric(captureGroupStr)) {
-				Integer cg = Integer.valueOf(captureGroupStr);
-				String regex = osRegex.get("regex").toString();
-				Pattern pattern = Pattern.compile(regex);
-				Matcher matcher = pattern.matcher(userAgent);
-				if(matcher.find() && matcher.groupCount()>=cg) {
-					return matcher.group(cg);
+		String ret = null;
+		Object versionRegex = osRegex.get("version");
+		if(versionRegex!=null) {
+			String versionStr = versionRegex.toString();
+			if(versionStr.indexOf("$")>=0) {
+				String groupStr = versionStr.replaceAll("\\$", "");
+				if(Utils.isNumeric(groupStr)) {
+					Integer cg = Integer.valueOf(groupStr);
+					String regex = osRegex.get("regex").toString();
+					Pattern pattern = Pattern.compile(regex);
+					Matcher matcher = pattern.matcher(userAgent);
+					if(matcher.find() && matcher.groupCount()>=cg) {
+						ret = matcher.group(cg);
+					}
+				}else{
+					ret = versionStr;
 				}
+			}else{
+				ret = versionStr;
 			}
 		}
-		return null;
+		return ret;
 	}
 	
 	/**

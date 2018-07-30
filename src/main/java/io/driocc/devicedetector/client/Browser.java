@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.Set;
 
 import io.driocc.devicedetector.DetectResult;
@@ -346,24 +344,6 @@ public class Browser extends ClientParserAbstract {
         }
         return ret;
     }
-   
-    
-	private String buildVersionByCaptureGroup(String userAgent, Map<String, Object> regexObj) {
-		Object captureGroup = regexObj.get("version");
-		if(captureGroup!=null) {
-			String captureGroupStr = captureGroup.toString().replaceAll("\\$", "");
-			if(Utils.isNumeric(captureGroupStr)) {
-				Integer cg = Integer.valueOf(captureGroupStr);
-				String regex = regexObj.get("regex").toString();
-				Pattern pattern = Pattern.compile(regex);
-				Matcher matcher = pattern.matcher(userAgent);
-				if(matcher.find() && matcher.groupCount()>=cg) {
-					return matcher.group(cg);
-				}
-			}
-		}
-		return null;
-	}
 
 	/**
 	 * we don't need this function

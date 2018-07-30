@@ -7,10 +7,13 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import io.driocc.devicedetector.DetectResult;
 import io.driocc.devicedetector.ParserAbstract;
+import io.driocc.devicedetector.utils.Utils;
 
 /**
  * @author kyon
@@ -60,5 +63,35 @@ public class ClientParserAbstract extends ParserAbstract{
         List<String> ret = nameList.stream().distinct().collect(Collectors.toList());
         ret.sort(Comparator.naturalOrder());
         return ret;
+	}
+	
+	/**
+	 * @param userAgent
+	 * @param osRegex
+	 * @return
+	 */
+	protected String buildVersionByCaptureGroup(String userAgent, Map<String, Object> osRegex) {
+		String ret = null;
+		Object versionRegex = osRegex.get("version");
+		if(versionRegex!=null) {
+			String versionStr = versionRegex.toString();
+			if(versionStr.indexOf("$")>=0) {
+				String groupStr = versionStr.replaceAll("\\$", "");
+				if(Utils.isNumeric(groupStr)) {
+					Integer cg = Integer.valueOf(groupStr);
+					String regex = osRegex.get("regex").toString();
+					Pattern pattern = Pattern.compile(regex);
+					Matcher matcher = pattern.matcher(userAgent);
+					if(matcher.find() && matcher.groupCount()>=cg) {
+						ret = matcher.group(cg);
+					}
+				}else{
+					ret = versionStr;
+				}
+			}else{
+				ret = versionStr;
+			}
+		}
+		return ret;
 	}
 }

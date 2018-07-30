@@ -3,6 +3,8 @@
  */
 package io.driocc.devicedetector.custom;
 
+import com.google.common.base.MoreObjects;
+
 import io.driocc.devicedetector.DetectResult;
 
 /**
@@ -61,5 +63,14 @@ public class CompositeDetectResult {
 	 */
 	public void setDevice(DetectResult device) {
 		this.device = device;
+	}
+	
+	public String toString() {
+		return MoreObjects.toStringHelper(this)
+			    .add("bot", bot)
+			    .add("os", os)
+			    .add("client", client)
+			    .add("device", device)
+			    .omitNullValues().toString();
 	}
 }

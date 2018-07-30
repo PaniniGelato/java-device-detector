@@ -27,15 +27,12 @@ public class DetectorTest {
 		uas.add("Mozilla/5.0 (Linux; Android 6.0.1; vivo Y66 Build/MMB29M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/537.36 WindVane/8.0.0 yk_web_sdk_1.0.4.1 Youku/6.9.0 (Android 6.0.1; Bridge_SDK; GUID a468f55b9f049e7be2bd3fd60b7e9534; UTDID WWNf+UIMaZwDAKoq3S+v27v4;)");
 		uas.add("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
 		uas.add("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36");
-		
+		uas.add("PlayStation 4");
 		DeviceDetector d = new DeviceDetector();
 		for(String ua : uas) {
 			CompositeDetectResult ret = d.parse(ua);
 			if(ret!=null) {
-				System.out.println(ret.getBot());
-				System.out.println(ret.getClient());
-				System.out.println(ret.getOs());
-				System.out.println(ret.getDevice());
+				System.out.println(ret);
 			}
 			System.out.println("--------------------------");
 		}

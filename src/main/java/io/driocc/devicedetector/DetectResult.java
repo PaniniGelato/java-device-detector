@@ -5,6 +5,8 @@ package io.driocc.devicedetector;
 
 import java.io.Serializable;
 
+import com.google.common.base.MoreObjects;
+
 /**
  * @author kyon
  *
@@ -196,5 +198,23 @@ public class DetectResult implements Serializable {
 	 */
 	public void setDeviceType(Integer deviceType) {
 		this.deviceType = deviceType;
+	}
+	
+	public String toString() {
+		return MoreObjects.toStringHelper(this)
+				.add("type", type)
+				.add("name", name)
+				.add("shortName", shortName)
+				.add("version", version)
+				.add("platform", platform)
+				.add("engine", engine)
+				.add("engineVersion", engineVersion)
+				.add("device", device)
+				.add("deviceType", deviceType)
+				.add("brand", brand)
+				.add("model", model)
+				.add("isBot", isBot)
+				.add("botDetail", botDetail)
+				.omitNullValues().toString();
 	}
 }

@@ -3,6 +3,8 @@
  */
 package io.driocc.devicedetector;
 
+import com.google.common.base.MoreObjects;
+
 /**
  * @author kyon
  *
@@ -72,5 +74,15 @@ public class BotDetail {
 	 */
 	public void setProducerUrl(String producerUrl) {
 		this.producerUrl = producerUrl;
+	}
+	
+	public String toString() {
+		return MoreObjects.toStringHelper(this)
+			    .add("name", name)
+			    .add("category", category)
+			    .add("url", url)
+			    .add("producerName", producerName)
+			    .add("producerUrl", producerUrl)
+			    .omitNullValues().toString();
 	}
 }
